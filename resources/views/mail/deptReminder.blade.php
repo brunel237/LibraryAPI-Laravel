@@ -28,10 +28,15 @@
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <h1>Welcome to the Silicon Library.</h1>
-                    <h2>Feel free to go through the various articles we offer for lending as well
-                        as for purchasing
-                    </h2>
+                    <h2>Greetings {{ $name }}.</h2>
+                    <p>You have an unpaid dept of {{ $amount_left }}Frs.
+                        This dept was made on the {{ $created_at }}.
+                    </p>
+                    <p>Repay this dept in order to continue benefiting from
+                        other services we offer.
+                    </p>
+                    <br>
+                    <p>Thank You</p>
                 </div>
             </div>
         </div>

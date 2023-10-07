@@ -35,6 +35,7 @@ Route::post("/signup", [AuthController::class, 'signup']);
 Route::apiResource('books', BookController::class);
 Route::apiResource('authors', AuthorController::class);
 Route::apiResource('users', UserController::class);
+Route::get("/users/{id}/notifications", [UserController::class, 'notifications']);
 
 Route::middleware('auth:api')->post("/payments/new", [UserController::class, 'newPayment']);
 Route::middleware('auth:api')->post("/commands", [RequestController::class, 'newCommand']);
@@ -45,35 +46,6 @@ Route::middleware(['auth:api','admin'])->group(function() {
     Route::delete("/commands/{id}", [RequestController::class, 'rejectCommand']);
 });
 
-// Route::post("/inscription", [AuthController::class, 'inscription'])->name("inscription");
-// Route::get("/deconnexion", function (){
-
-    // if (auth()->user()) {
-        // Auth::logout();
-        // return response()->json(["message"=>"Déconnexion Réussie..."], 200);
-    // }
-    // return response()->json(["message"=>"Vous n'êtes connecté..."], 422);
-// });
-// Route::post("/connexion", [AuthController::class, 'connexion'])->name("connexion");
-
-// Route::prefix("ouvrages")->middleware('auth:api')->group(function (){
-//     Route::get("/", [OuvrageController::class, 'index']);
-//     Route::middleware('admin')->group(function(){
-//         Route::post("/", [OuvrageController::class, 'store']);
-//         Route::put("/{id}", [OuvrageController::class, 'update'])->whereNumber('id');;
-//         Route::delete("/{id}", [OuvrageController::class, 'destroy'])->whereNumber('id');
-//     });
-
-//     Route::prefix("livres")->group(function(){
-//         Route::get("/", [LivreController::class, 'index']);
-//         Route::get("/exemplaires", [LivreController::class, 'getExemplaire']);
-//         Route::post("/exemplaires", [LivreController::class, 'storeExemplaire']);
-//         Route::middleware('admin')->group(function(){
-//             Route::post("/", [LivreController::class, 'store']);
-//             Route::put("/{id}", [LivreController::class, 'update'])->whereNumber('id');;
-//             Route::delete("/{id}", [LivreController::class, 'destroy'])->whereNumber('id');
-//         });
-//     });
 
 // });
 

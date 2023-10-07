@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Mail\WelcomeMail;
 use App\Models\Client;
 use App\Models\User;
 use Illuminate\Database\Console\Migrations\RefreshCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -42,6 +44,8 @@ class AuthController extends Controller
             }
             $new_user = User::newUser($validData, $client);
         }
+
+        Mail::to($new_user->client->email)->send(new WelcomeMail($new_user));
 
         return response()->json(["message" => "Sign Up Successfull", "user" => $new_user]);
     }

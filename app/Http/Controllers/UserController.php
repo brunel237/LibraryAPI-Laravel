@@ -10,6 +10,7 @@ use App\Models\Account;
 use App\Models\Request as ModelsRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -77,11 +78,17 @@ class UserController extends Controller
 
     }
 
+    public function notifications(int $id){
+
+        $notification = DB::select('select * from notifications where notifiable_id = ?', [$id]);
+        return $notification;
+    }
+
     public function newPayment(PaymentRequest $request){
         $account = Account::where('account_number', $request['account_number'])->first();
 
         if ($account && $account->user_id == auth()->user()->id){
-
+            //DB::beginTransaction();
             $ans = $account->initiatePayment($request['amount']);
 
             if (json_decode($ans)->status){

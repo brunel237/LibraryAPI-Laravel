@@ -27,26 +27,26 @@ class Payment extends Model
         static::creating(function($payment){
             $account_id = str_pad($payment->account_id, 4, 0, STR_PAD_LEFT);
             $user_id = str_pad($payment->account->user_id, 6, 0, STR_PAD_LEFT);
-
             $payment->id = now()->toDateString()."-".now()->toTimeString()."-{$account_id}-{$user_id}";
+
 
         });
 
-        static::saved(function($payment) {
-            $user = $payment->account->user->first();
-            //  $userDept = $user->deptStatus()->first();
-            $userDept = DeptStatus::where('user_id', $user->id)->first();
-            if ($userDept){
+        static::created(function($payment) {
+            $user = $payment->account->user;
+            $userDept = $user->deptStatus;
+            if ($userDept) {
                 $new_amount = $payment->amount - $userDept->amount_left;
                 if ($new_amount < 0){
+                    $user->notify(new PaymentNotification($payment->id, $payment->amount, abs($new_amount)));
                     $payment->update(['amount' => 0]);
                     $userDept->update(['amount_left' => abs($new_amount)]);
-                    $user->notify(new PaymentNotification($payment->id, $payment->amount, abs($new_amount)));
                 }
                 else{
-                    $payment->update(['amount' => $new_amount]);
-                    $userDept->delete();
                     $user->notify(new PaymentNotification($payment->id, $userDept->amount_left, 0));
+                    $payment->update(['amount' => $new_amount]);
+                    $userDept->update(['amount_left' => 0]);
+                    $userDept->delete();
                 }
             }
         });

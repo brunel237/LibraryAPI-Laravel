@@ -2,41 +2,40 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User;
 
-class WelcomeMail extends Mailable
+class DeptReminderEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
+    /***
+     *Create a new message instance.
      * @return void
      */
 
-    private $name, $username, $email;
     private $user;
-
-    public function __construct(User $user = null)
+    
+    public function __construct(User $user=null)
     {
         $this->user = $user;
     }
 
-    /**
+    /***
      * Build the message.
      *
      * @return $this
      */
+
     public function build()
     {
-        return $this->view('view.mail.welcome')->with([
-            'email' => $this->user->client->email,
+        return $this->view('view.mail.deptReminder')->with([
             'name' => "{$this->user->client->firstName} {$this->user->client->lastName}",
-            'username' => $this->user->username
+            'amount_left' => $this->user->deptStatus->amount_left,
+            'created_at' => $this->user->deptStatus->created_at
         ]);
     }
 
